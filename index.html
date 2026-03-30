@@ -19,7 +19,7 @@
            ========================================================================== */
         @font-face {
             font-family: 'Lineal';
-            src: url('./Lineal-Regular.otf?v=2') format('opentype');
+            src: url('./Lineal-Regular.otf?v=5') format('opentype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -1267,10 +1267,8 @@
             .product-card:hover .product-bottle { transform: translate(-50%, -55%) scale(1.1); }
             .btn-close:hover { background-color: var(--color-primary); border-color: var(--color-primary); color: #fff; transform: rotate(90deg); }
             .btn-solid:hover { background-color: var(--color-primary); }
-        }
-
-        /* 2. Parallax Background ONLY for Desktop */
-        @media (min-width: 769px) {
+            
+            /* 2. Parallax Background ONLY for devices with a mouse (excludes iPads/iPhones) */
             .hero-bg {
                 background-attachment: fixed;
             }
