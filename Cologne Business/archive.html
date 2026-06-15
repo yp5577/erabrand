@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>era | The Archive</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. CUSTOM FONT & VARIABLES
+           ========================================================================== */
+        @font-face {
+            font-family: 'Lineal';
+            src: url('./Lineal-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --color-background: #F9F9F9;
+            --color-surface: #FFFFFF;
+            --color-surface-alt: #F0F0F0;
+            --color-text-main: #111111;
+            --color-text-light: #777777;
+            --color-border: #E0E0E0;
+
+            --font-logo: 'Lineal', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 64px;
+            --spacing-xxxl: 96px;
+
+            --transition-fast: 0.3s ease;
+            --transition-medium: 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* ==========================================================================
+           2. BASE STYLES
+           ========================================================================== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 400; }
+        a { text-decoration: none; color: inherit; transition: color var(--transition-fast); }
+        ul { list-style: none; }
+        button { border: none; background: none; font-family: inherit; cursor: pointer; outline: none; }
+        img { max-width: 100%; height: auto; display: block; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-xl); }
+
+        /* ==========================================================================
+           3. NAVIGATION BAR
+           ========================================================================== */
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background-color: rgba(249, 249, 249, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 1000; padding: 15px 0; border-bottom: 1px solid var(--color-border);
+            transition: all var(--transition-medium);
+        }
+        .navbar-content { display: flex; justify-content: space-between; align-items: center; }
+        .nav-brand { font-family: var(--font-logo); font-size: 2.2rem; color: var(--color-text-main); text-transform: lowercase; }
+        .icon-btn {
+            position: relative; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid transparent; transition: all var(--transition-fast);
+        }
+        .icon-btn:hover { border-color: var(--color-border); }
+        .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* ==========================================================================
+           4. PAGE HEADER (Minimalist)
+           ========================================================================== */
+        .page-header {
+            padding: 200px 0 100px;
+            text-align: center;
+            background-color: var(--color-background);
+        }
+        .header-content { max-width: 700px; margin: 0 auto; }
+        .header-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 20px; display: block; color: var(--color-text-light); }
+        .page-header h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 30px; font-style: italic; }
+        .page-header p { font-size: 1.1rem; color: var(--color-text-light); }
+
+        /* ==========================================================================
+           5. MASONRY REVIEW GRID
+           ========================================================================== */
+        .archive-section { padding: 40px 0 var(--spacing-xxxl); }
+        
+        .archive-grid {
+            display: column;
+            column-count: 2;
+            column-gap: 40px;
+        }
+
+        .archive-card {
+            background-color: var(--color-surface);
+            padding: 40px;
+            margin-bottom: 40px;
+            break-inside: avoid;
+            border: 1px solid var(--color-border);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .archive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        .review-text {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            line-height: 1.5;
+            color: var(--color-text-main);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .review-text::before {
+            content: '"';
+            font-family: var(--font-heading);
+            font-size: 4rem;
+            color: var(--color-border);
+            position: absolute;
+            top: -30px;
+            left: -20px;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        .review-text p { position: relative; z-index: 1; }
+
+        .review-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--color-border);
+            padding-top: 20px;
+        }
+
+        .reviewer-name {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .fragrance-worn {
+            font-size: 0.8rem;
+            color: var(--color-text-light);
+            font-style: italic;
+            font-family: var(--font-heading);
+        }
+
+        /* Occasional Image Block mixed into the archive */
+        .archive-image {
+            margin-bottom: 40px;
+            break-inside: avoid;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+        }
+        
+        .archive-image img {
+            width: 100%;
+            height: auto;
+            filter: grayscale(20%);
+            transition: filter var(--transition-medium);
+        }
+        
+        .archive-image:hover img {
+            filter: grayscale(0%);
+        }
+
+        /* ==========================================================================
+           6. SUBMIT TO ARCHIVE SECTION
+           ========================================================================== */
+        .submit-section {
+            padding: var(--spacing-xxxl) 0;
+            background-color: #111;
+            color: #fff;
+            text-align: center;
+        }
+
+        .submit-container { max-width: 600px; margin: 0 auto; }
+        .submit-container h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .submit-container p { color: #888; margin-bottom: 40px; font-size: 1rem; }
+
+        .btn-solid-light {
+            display: inline-block;
+            padding: 14px 40px;
+            background-color: #fff;
+            color: #111;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .btn-solid-light:hover { background-color: #ccc; }
+
+        /* ==========================================================================
+           7. RESPONSIVE
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .archive-grid { column-count: 1; }
+        }
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 3rem; }
+            .archive-card { padding: 30px; }
+            .review-text { font-size: 1.2rem; }
+        }
+
+        /* ==========================================================================
+           8. FOOTER
+           ========================================================================== */
+        .footer { background-color: #111; padding: 40px 0; color: #fff; text-align: center; border-top: 1px solid #333;}
+        .footer-logo { font-family: var(--font-logo); font-size: 2.5rem; display: block; margin-bottom: 20px; }
+        .footer-links a { color: #888; margin: 0 15px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
+        .footer-links a:hover { color: #fff; }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar" id="navbar">
+        <div class="container navbar-content">
+            <button class="icon-btn" onclick="window.location.href='index.html'" style="border: none;">
+                <svg viewBox="0 0 24 24" style="width: 24px; height: 24px;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </button>
+            <a href="index.html" class="nav-brand">era</a>
+            <div class="nav-icons">
+                <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" /></svg></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <div class="container header-content">
+            <span class="header-label">The Archive</span>
+            <h1>Scent Trails</h1>
+            <p>Chronicles of beast-mode performance. Unfiltered experiences and invisible signatures left behind by the individuals who wear an era.</p>
+        </div>
+    </section>
+
+    <!-- MASONRY ARCHIVE GRID -->
+    <section class="archive-section">
+        <div class="container">
+            <div class="archive-grid">
+                
+                <!-- Review 1 -->
+                <div class="archive-card">
+                    <div class="review-text">
+                        <p>I sprayed this twice on my jacket before a flight. Three days later, the flight attendant on my return trip asked me what I was wearing as I boarded. The projection on this extrait is absolute madness.</p>
+                    </div>
+                    <div class="review-meta">
+                        <span class="reviewer-name">Marcus T.</span>
+                        <span class="fragrance-worn">Wearing Midnight</span>
+                    </div>
+                </div>
+
+                <!-- Image Block -->
+                <div class="archive-image">
+                    <img src="images/monsoon.jpg" alt="Monsoon Lifestyle">
+                </div>
+
+                <!-- Review 2 -->
+                <div class="archive-card">
+                    <div class="review-text">
+                        <p>It opens sharp and earthy, exactly like the air right before a heavy storm breaks. I have over 50 niche fragrances in my collection, and nothing behaves quite like this on the skin. It evolves beautifully over 12 hours.</p>
+                    </div>
+                    <div class="review-meta">
+                        <span class="reviewer-name">David L.</span>
+                        <span class="fragrance-worn">Wearing Monsoon</span>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="archive-card">
+                    <div class="review-text">
+                        <p>Completely unapologetic. It fills the room the moment you walk in, but in a way that makes people lean closer instead of pulling away. The damask rose and dark cedar dry-down is incredibly intoxicating.</p>
+                    </div>
+                    <div class="review-meta">
+                        <span class="reviewer-name">Elena R.</span>
+                        <span class="fragrance-worn">Wearing Crimson</span>
+                    </div>
+                </div>
+
+                <!-- Image Block -->
+                <div class="archive-image">
+                    <img src="images/jasmine-veil.jpg" alt="Jasmine Veil Aesthetic">
+                </div>
+
+                <!-- Review 4 -->
+                <div class="archive-card">
+                    <div class="review-text">
+                        <p>There is a warmth to this that feels like liquid gold. I put it on for an evening event at 7 PM, and I could still clearly smell the melted amber and tonka bean when I woke up the next morning. True beast mode.</p>
+                    </div>
+                    <div class="review-meta">
+                        <span class="reviewer-name">Sarah K.</span>
+                        <span class="fragrance-worn">Wearing Golden Hour</span>
+                    </div>
+                </div>
+
+                <!-- Review 5 -->
+                <div class="archive-card">
+                    <div class="review-text">
+                        <p>A masterpiece of blending. The oud does not overpower; it supports the saffron and roasted coffee perfectly. It smells wealthy. It smells like old money and new ambition wrapped into one.</p>
+                    </div>
+                    <div class="review-meta">
+                        <span class="reviewer-name">Arjun P.</span>
+                        <span class="fragrance-worn">Wearing The Silk Route</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SUBMIT SECTION -->
+    <section class="submit-section">
+        <div class="container submit-container">
+            <h2>Leave Your Mark</h2>
+            <p>Did an era fragrance define a specific chapter of your life? Did it leave an unforgettable impression? Submit your story to the archive.</p>
+            <a href="mailto:contact@erafragrances.com" class="btn-solid-light">Share Your Story</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <span class="footer-logo">era</span>
+            <div class="footer-links" style="margin-bottom: 20px;">
+                <a href="index.html">Collection</a>
+                <a href="craft.html">The Craft</a>
+                <a href="epoch.html">The Epoch</a>
+            </div>
+            <p style="color: #555; font-size: 0.8rem;">&copy; 2026 era Fragrances. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>era | The Epoch</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. CUSTOM FONT & VARIABLES
+           ========================================================================== */
+        @font-face {
+            font-family: 'Lineal';
+            src: url('./Lineal-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --color-background: #F9F9F9;
+            --color-surface: #FFFFFF;
+            --color-surface-alt: #F0F0F0;
+            --color-text-main: #111111;
+            --color-text-light: #777777;
+            --color-border: #E0E0E0;
+            --color-accent: #2C3E50;
+
+            --font-logo: 'Lineal', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 64px;
+            --spacing-xxxl: 96px;
+
+            --transition-fast: 0.3s ease;
+            --transition-medium: 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* ==========================================================================
+           2. BASE STYLES
+           ========================================================================== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 400; }
+        a { text-decoration: none; color: inherit; transition: color var(--transition-fast); }
+        ul { list-style: none; }
+        button { border: none; background: none; font-family: inherit; cursor: pointer; outline: none; }
+        img { max-width: 100%; height: auto; display: block; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-xl); }
+
+        /* ==========================================================================
+           3. NAVIGATION BAR
+           ========================================================================== */
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 1000; padding: 15px 0; border-bottom: 1px solid var(--color-border);
+            transition: all var(--transition-medium);
+        }
+        .navbar-content { display: flex; justify-content: space-between; align-items: center; }
+        .nav-brand { font-family: var(--font-logo); font-size: 2.2rem; color: var(--color-text-main); text-transform: lowercase; }
+        .nav-icons { display: flex; gap: var(--spacing-md); }
+        .icon-btn {
+            position: relative; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid transparent; transition: all var(--transition-fast);
+        }
+        .icon-btn:hover { border-color: var(--color-border); }
+        .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* ==========================================================================
+           4. PAGE HEADER (Minimalist)
+           ========================================================================== */
+        .page-header {
+            padding: 200px 0 100px;
+            text-align: center;
+            background-color: var(--color-background);
+            position: relative;
+        }
+        .header-content { max-width: 700px; margin: 0 auto; }
+        .header-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 20px; display: block; color: var(--color-text-light); }
+        .page-header h1 { font-size: 4.5rem; line-height: 1.1; margin-bottom: 30px; font-style: italic; }
+
+        /* ==========================================================================
+           5. STORY SECTIONS (Staggered Editorial)
+           ========================================================================== */
+        .story-section { padding: var(--spacing-xxxl) 0; }
+        .story-block {
+            display: flex; align-items: center; gap: 80px; margin-bottom: 120px;
+        }
+        .story-block.reverse { flex-direction: row-reverse; }
+        
+        .story-text { flex: 1; max-width: 500px; }
+        .story-text h2 { font-size: 2.5rem; margin-bottom: 24px; line-height: 1.2; }
+        .story-text p { font-size: 1.1rem; color: var(--color-text-light); margin-bottom: 20px; line-height: 1.8; }
+        
+        .story-image { flex: 1; position: relative; }
+        .img-wrapper { position: relative; padding-top: 120%; background: var(--color-surface-alt); overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        .img-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+
+        .story-quote {
+            text-align: center; max-width: 800px; margin: 100px auto; padding: 60px 0;
+            border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);
+        }
+        .story-quote h3 { font-size: 2.2rem; font-style: italic; color: var(--color-text-main); line-height: 1.4; }
+
+        /* ==========================================================================
+           6. RESPONSIVE
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .story-block, .story-block.reverse { flex-direction: column; gap: 40px; text-align: center; }
+            .story-text { max-width: 100%; }
+            .story-image { width: 100%; max-width: 600px; margin: 0 auto; }
+            .img-wrapper { padding-top: 100%; }
+        }
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 3.5rem; }
+            .story-quote h3 { font-size: 1.8rem; }
+        }
+
+        /* ==========================================================================
+           7. FOOTER
+           ========================================================================== */
+        .footer { background-color: #111; padding: 80px 0 40px; color: #fff; text-align: center; }
+        .footer-logo { font-family: var(--font-logo); font-size: 2.5rem; display: block; margin-bottom: 20px; }
+        .footer-links a { color: #888; margin: 0 15px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
+        .footer-links a:hover { color: #fff; }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar" id="navbar">
+        <div class="container navbar-content">
+            <button class="icon-btn" onclick="window.location.href='index.html'" style="border: none;">
+                <svg viewBox="0 0 24 24" style="width: 24px; height: 24px;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </button>
+            <a href="index.html" class="nav-brand">era</a>
+            <div class="nav-icons">
+                <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" /></svg></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <div class="container header-content">
+            <span class="header-label">The Story</span>
+            <h1>The Epoch</h1>
+        </div>
+    </section>
+
+    <!-- STORY CONTENT -->
+    <section class="story-section">
+        <div class="container">
+            
+            <!-- Block 1 -->
+            <div class="story-block">
+                <div class="story-image">
+                    <div class="img-wrapper"><img src="images/golden-hour.jpg" alt="Golden Hour Era"></div>
+                </div>
+                <div class="story-text">
+                    <h2>What is an era?</h2>
+                    <p>The genesis of our house is rooted in its very translation. Derived from the ancient concept of a <em>Yug</em>, an era represents an epoch—a defining, transformative span of time.</p>
+                    <p>We are not static creatures. We evolve through different chapters of our lives, taking on new ambitions, facing new challenges, and discovering new facets of our confidence. <strong>era</strong> was founded on the belief that every one of these chapters deserves a signature.</p>
+                </div>
+            </div>
+
+            <!-- Block 2 -->
+            <div class="story-block reverse">
+                <div class="story-image">
+                    <div class="img-wrapper"><img src="images/midnight.jpg" alt="Midnight Era"></div>
+                </div>
+                <div class="story-text">
+                    <h2>The Invisible Anchor</h2>
+                    <p>Scent is the most powerful anchor to human memory. Long after a moment has passed, a single note of dark cedar or crushed cardamom can pull you violently back in time.</p>
+                    <p>We craft our extraits de parfum not merely to make you smell exceptional, but to capture your current era. When you spray an <strong>era</strong> fragrance, you are bottling the ambition and the unwritten future of exactly who you are in this moment.</p>
+                </div>
+            </div>
+
+            <!-- Quote Divider -->
+            <div class="story-quote">
+                <h3>"A fragrance is the invisible signature of your current self. It speaks before you do, and lingers long after you are gone."</h3>
+            </div>
+
+            <!-- Block 3 -->
+            <div class="story-block">
+                <div class="story-image">
+                    <div class="img-wrapper"><img src="images/hero-men.jpg" alt="The Founder's Vision"></div>
+                </div>
+                <div class="story-text">
+                    <h2>The Unapologetic Vision</h2>
+                    <p>Born from a desire to bridge profound heritage with modern, beast-mode performance, <strong>era</strong> refuses to compromise. We ignore the fleeting trends of the mass market to focus purely on the architecture of scent—creating high-concentration formulas that project confidence and allure.</p>
+                    <p>Spray the confidence within. Welcome to your new era.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <span class="footer-logo">era</span>
+            <div class="footer-links" style="margin-bottom: 20px;">
+                <a href="index.html">Collection</a>
+                <a href="craft.html">The Craft</a>
+                <a href="archive.html">The Archive</a>
+            </div>
+            <p style="color: #555; font-size: 0.8rem;">&copy; 2026 era Fragrances. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

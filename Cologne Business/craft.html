@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>era | The Craft</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. CUSTOM FONT & VARIABLES
+           ========================================================================== */
+        @font-face {
+            font-family: 'Lineal';
+            src: url('./Lineal-Regular.otf?v=6') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --color-background: #F9F9F9;
+            --color-surface: #FFFFFF;
+            --color-surface-alt: #F0F0F0;
+            --color-text-main: #111111;
+            --color-text-light: #777777;
+            --color-border: #E0E0E0;
+
+            --theme-bg: #F4F5F6; 
+            --theme-accent: #2C3E50; 
+            --theme-btn-hover: #2C3E50;
+
+            --font-logo: 'Lineal', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 64px;
+            --spacing-xxxl: 96px;
+
+            --transition-fast: 0.3s ease;
+            --transition-medium: 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            --transition-slow: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ==========================================================================
+           2. BASE STYLES
+           ========================================================================== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 400; }
+        a { text-decoration: none; color: inherit; transition: color var(--transition-fast); }
+        ul { list-style: none; }
+        button { border: none; background: none; font-family: inherit; cursor: pointer; outline: none; }
+        img { max-width: 100%; height: auto; display: block; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-xl); }
+
+        /* ==========================================================================
+           3. NAVIGATION BAR (Same as Index)
+           ========================================================================== */
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 1000; padding: 15px 0; border-bottom: 1px solid var(--color-border);
+            transition: all var(--transition-medium);
+        }
+        .navbar-content { display: flex; justify-content: space-between; align-items: center; }
+        .nav-brand { font-family: var(--font-logo); font-size: 2.2rem; color: var(--color-text-main); text-transform: lowercase; }
+        .nav-icons { display: flex; gap: var(--spacing-md); }
+        .icon-btn {
+            position: relative; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid transparent; transition: all var(--transition-fast);
+        }
+        .icon-btn:hover { border-color: var(--color-border); }
+        .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* ==========================================================================
+           4. PAGE HEADER (Editorial)
+           ========================================================================== */
+        .page-header {
+            padding: 180px 0 100px;
+            text-align: center;
+            background-color: #000;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-header-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('images/bottom-cover-placeholder.jpg');
+            background-size: cover; background-position: center;
+            opacity: 0.3; filter: grayscale(100%); z-index: 0;
+        }
+        .header-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; }
+        .header-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 20px; display: block; color: #aaa; }
+        .page-header h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 30px; }
+        .page-header p { font-size: 1.1rem; color: #ccc; font-weight: 300; }
+
+        /* ==========================================================================
+           5. CRAFT SECTIONS (Text & Image Blocks)
+           ========================================================================== */
+        .craft-section { padding: 120px 0; border-bottom: 1px solid var(--color-border); }
+        .craft-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .craft-grid.reverse { direction: rtl; }
+        .craft-grid.reverse > * { direction: ltr; }
+        
+        .craft-text { max-width: 500px; }
+        .craft-number { font-family: var(--font-logo); font-size: 5rem; color: var(--color-border); line-height: 1; margin-bottom: -20px; }
+        .craft-text h2 { font-size: 2.5rem; margin-bottom: 24px; line-height: 1.2; }
+        .craft-text p { font-size: 1.05rem; color: var(--color-text-light); margin-bottom: 20px; line-height: 1.8; }
+        
+        .craft-image { position: relative; padding-top: 130%; background: var(--color-surface-alt); overflow: hidden; }
+        .craft-image img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+
+        /* ==========================================================================
+           6. THE PYRAMID (Visual Breakdown)
+           ========================================================================== */
+        .pyramid-section { padding: 120px 0; background-color: var(--color-surface); text-align: center; }
+        .pyramid-header { max-width: 600px; margin: 0 auto 80px; }
+        .pyramid-header h2 { font-size: 3rem; margin-bottom: 20px; }
+        
+        .pyramid-container {
+            display: flex; flex-direction: column; gap: 40px; max-width: 800px; margin: 0 auto;
+        }
+        .pyramid-tier {
+            padding: 40px; border: 1px solid var(--color-border); background: var(--color-background);
+            transition: transform var(--transition-fast);
+        }
+        .pyramid-tier:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.04); }
+        .tier-label { font-family: var(--font-heading); font-size: 1.5rem; font-style: italic; margin-bottom: 10px; }
+        .tier-time { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--color-text-main); font-weight: 600; margin-bottom: 20px; display: block; }
+        .tier-desc { color: var(--color-text-light); font-size: 0.95rem; }
+
+        /* ==========================================================================
+           7. RESPONSIVE
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .craft-grid { grid-template-columns: 1fr; gap: 40px; }
+            .craft-grid.reverse { direction: ltr; }
+            .craft-image { padding-top: 100%; }
+        }
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 3rem; }
+            .pyramid-tier { padding: 30px 20px; }
+        }
+
+        /* (Include Footer & Modal CSS here - abbreviated for clarity in this prompt, but identical to index.html) */
+        .footer { background-color: #111; padding: 80px 0 40px; color: #fff; text-align: center; }
+        .footer-logo { font-family: var(--font-logo); font-size: 2.5rem; display: block; margin-bottom: 20px; }
+        .footer-links a { color: #888; margin: 0 15px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
+        .footer-links a:hover { color: #fff; }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar" id="navbar">
+        <div class="container navbar-content">
+            <button class="icon-btn" onclick="window.location.href='index.html'" style="border: none;">
+                <svg viewBox="0 0 24 24" style="width: 24px; height: 24px;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </button>
+            <a href="index.html" class="nav-brand">era</a>
+            <div class="nav-icons">
+                <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" /></svg></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="page-header-bg"></div>
+        <div class="container header-content">
+            <span class="header-label">The Craft</span>
+            <h1>Architecture of Scent</h1>
+            <p>We do not make eau de toilette. We do not dilute our vision. Discover the meticulous chemistry, global sourcing, and unyielding concentration behind an era.</p>
+        </div>
+    </section>
+
+    <section class="craft-section">
+        <div class="container craft-grid">
+            <div class="craft-text">
+                <div class="craft-number">01</div>
+                <h2>The Extrait Difference</h2>
+                <p>In the world of commercial perfumery, water and alcohol are used to stretch margins, resulting in scents that vanish before lunch. <strong>era</strong> operates on a different standard entirely.</p>
+                <p>Every bottle we produce is strictly an <strong>Extrait de Parfum</strong>, boasting a perfume oil concentration upwards of 30%. This isn't just about strength; it is about depth, complexity, and an unapologetic, room-filling projection. This is what creates a true "beast mode" performance, ensuring your invisible signature lingers for 12+ hours.</p>
+            </div>
+            <div class="craft-image">
+                <img src="images/monsoon.jpg" alt="Extrait Concentration">
+            </div>
+        </div>
+    </section>
+
+    <section class="craft-section" style="background-color: var(--color-surface);">
+        <div class="container craft-grid reverse">
+            <div class="craft-text">
+                <div class="craft-number">02</div>
+                <h2>Global Reserves</h2>
+                <p>A fragrance is only as potent as the earth from which it grows. We bypass mass-market chemical brokers to source raw, premium extracts from the most prestigious global reserves.</p>
+                <p>Whether it is the dark, smoky depth of aged Agarwood (Oud), the night-blooming richness of pure Jasmine Sambac absolute, or the earthy tension of crushed vetiver roots, our ingredients are selected for their raw intensity. These pure oils are then masterfully blended and aged, allowing the molecules to bond and mature before they ever touch glass.</p>
+            </div>
+            <div class="craft-image">
+                <img src="images/jasmine-veil.jpg" alt="Raw Ingredients">
+            </div>
+        </div>
+    </section>
+
+    <section class="pyramid-section">
+        <div class="container">
+            <div class="pyramid-header">
+                <h2>The Anatomy of a Trail</h2>
+                <p style="color: var(--color-text-light);">A true luxury fragrance is not static; it is a living, breathing entity that evolves on the skin over the course of a day. This is how an era unfolds.</p>
+            </div>
+            
+            <div class="pyramid-container">
+                <div class="pyramid-tier" style="width: 60%; margin: 0 auto;">
+                    <div class="tier-label">The Top Notes</div>
+                    <span class="tier-time">Minutes 0 to 30</span>
+                    <p class="tier-desc">The introduction. Highly volatile, sharp, and magnetic. These lighter molecules—sparkling citruses, crushed spices, and fresh petrichor—are designed to grab immediate attention and pull you into the scent's narrative.</p>
+                </div>
+                
+                <div class="pyramid-tier" style="width: 80%; margin: 0 auto;">
+                    <div class="tier-label">The Heart Notes</div>
+                    <span class="tier-time">Hours 1 to 4</span>
+                    <p class="tier-desc">The soul of the fragrance. As the top notes evaporate, the robust floral absolutes, rich resins, and dense woods take over. This is the core character of the perfume, creating the primary scent bubble that projects around you.</p>
+                </div>
+                
+                <div class="pyramid-tier" style="width: 100%; margin: 0 auto;">
+                    <div class="tier-label">The Base Notes</div>
+                    <span class="tier-time">Hours 5 to 12+</span>
+                    <p class="tier-desc">The anchor and the memory. Composed of the heaviest, most luxurious molecules like aged leather, royal oud, cashmere wood, and dark musks. These notes bond tightly to your skin and clothing, leaving that unforgettable, lingering scent trail long after you have departed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <span class="footer-logo">era</span>
+            <div class="footer-links" style="margin-bottom: 20px;">
+                <a href="index.html">Collection</a>
+                <a href="epoch.html">The Epoch</a>
+                <a href="archive.html">The Archive</a>
+            </div>
+            <p style="color: #555; font-size: 0.8rem;">&copy; 2026 era Fragrances. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

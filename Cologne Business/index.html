@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>era | extrait de parfum</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. CUSTOM FONT INTEGRATION
+           ========================================================================== */
+        @font-face {
+            font-family: 'Lineal';
+            src: url('./Lineal-Regular.otf?v=6') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* ==========================================================================
+           2. CSS VARIABLES (Dynamic Luxury Palette)
+           ========================================================================== */
+        :root {
+            --color-background: #F9F9F9;
+            --color-surface: #FFFFFF;
+            --color-surface-alt: #F0F0F0;
+            --color-text-main: #111111;
+            --color-text-light: #777777;
+            --color-border: #E0E0E0;
+
+            --theme-bg: #F4F5F6; 
+            --theme-accent: #2C3E50; 
+            --theme-btn-hover: #2C3E50;
+
+            --font-logo: 'Lineal', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 64px;
+            --spacing-xxxl: 96px;
+
+            --transition-fast: 0.3s ease;
+            --transition-medium: 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            --transition-slow: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body.theme-women {
+            --theme-bg: #FAF4F4; 
+            --theme-accent: #8A4B56; 
+            --theme-btn-hover: #8A4B56;
+        }
+
+        /* ==========================================================================
+           3. BASE STYLES
+           ========================================================================== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color var(--transition-slow);
+        }
+        body.loading { overflow: hidden; }
+        h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 400; }
+        a { text-decoration: none; color: inherit; transition: color var(--transition-fast); }
+        ul { list-style: none; }
+        button { border: none; background: none; font-family: inherit; cursor: pointer; outline: none; }
+        img { max-width: 100%; height: auto; display: block; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-xl); }
+
+        /* ==========================================================================
+           4. PRELOADER
+           ========================================================================== */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--color-surface);
+            z-index: 10000;
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+        }
+        #preloader.fade-out { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+        .loader-logo {
+            font-family: var(--font-logo); font-size: 3rem; color: var(--color-text-main);
+            text-transform: lowercase; margin-bottom: 20px;
+        }
+        .loader-line-container { width: 100px; height: 1px; background-color: var(--color-border); position: relative; overflow: hidden; }
+        .loader-line {
+            position: absolute; top: 0; left: 0; height: 100%; width: 0%;
+            background-color: var(--color-text-main);
+            animation: loadLine 1.5s ease-in-out forwards;
+        }
+        @keyframes loadLine { 0% { width: 0%; left: 0; } 50% { width: 100%; left: 0; } 100% { width: 100%; left: 100%; } }
+
+        /* ==========================================================================
+           5. SCROLL REVEAL ANIMATIONS
+           ========================================================================== */
+        .reveal-up { opacity: 0; transform: translateY(30px); transition: all var(--transition-slow); }
+        .reveal-fade { opacity: 0; transition: opacity var(--transition-slow); }
+        .is-revealed { opacity: 1 !important; transform: translate(0) !important; }
+        .delay-100 { transition-delay: 0.1s; } .delay-200 { transition-delay: 0.2s; } .delay-400 { transition-delay: 0.4s; }
+
+        /* ==========================================================================
+           6. NAVIGATION BAR
+           ========================================================================== */
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 1000; padding: 25px 0;
+            transition: all var(--transition-medium);
+            transform: translateY(-100%);
+        }
+        .navbar.nav-visible { transform: translateY(0); }
+        .navbar.scrolled { padding: 15px 0; border-bottom: 1px solid var(--color-border); }
+        .navbar-content { display: flex; justify-content: space-between; align-items: center; }
+        
+        .nav-brand { font-family: var(--font-logo); font-size: 2.2rem; color: var(--color-text-main); text-transform: lowercase; }
+        
+        .nav-icons { display: flex; gap: var(--spacing-md); }
+        .icon-btn {
+            position: relative; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid transparent; transition: all var(--transition-fast);
+        }
+        .icon-btn:hover { border-color: var(--color-border); }
+        .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        .cart-badge {
+            position: absolute; top: -2px; right: -2px;
+            background-color: var(--color-text-main); color: #fff;
+            font-size: 0.65rem; width: 18px; height: 18px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s;
+        }
+        .cart-badge.bump { transform: scale(1.3); }
+
+        /* ==========================================================================
+           7. HERO SECTION
+           ========================================================================== */
+        .hero {
+            position: relative; height: 100vh; min-height: 700px;
+            display: flex; align-items: center; justify-content: center;
+            background-color: #000; overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0; transform: scale(1.05);
+            transition: opacity 1.2s ease, transform 10s linear; z-index: 0;
+        }
+        .hero-bg.active { opacity: 1; transform: scale(1); }
+        
+        .hero-overlay { 
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
+            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 100%); 
+            z-index: 1; 
+        }
+
+        .hero-content { 
+            position: relative; z-index: 2; text-align: center; 
+            display: flex; flex-direction: column; align-items: center; gap: 30px;
+            opacity: 0; transform: translateY(20px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hero-content.animate-in { opacity: 1; transform: translateY(0); }
+        
+        .hero-logo-center {
+            font-family: var(--font-logo); font-size: 5rem; color: #fff; text-transform: lowercase; line-height: 1;
+        }
+
+        .hero-quote { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        
+        .quote-line {
+            font-family: var(--font-body); font-size: 0.85rem; letter-spacing: 6px; 
+            text-transform: uppercase; color: #fff; font-weight: 300;
+        }
+        
+        .quote-line.highlight {
+            font-family: var(--font-heading); font-size: 4rem; text-transform: lowercase; 
+            letter-spacing: 0; font-style: italic; color: #fff; line-height: 1.1; margin: 10px 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .pulse-text { animation: fadeSwitch 0.8s ease; }
+        @keyframes fadeSwitch { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+
+        .scroll-indicator {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            opacity: 0; transition: opacity 1s ease 1s; z-index: 2;
+        }
+        .scroll-indicator.animate-in { opacity: 1; }
+        .scroll-text { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: #fff; }
+        .scroll-line { width: 1px; height: 40px; background-color: rgba(255, 255, 255, 0.3); position: relative; overflow: hidden; }
+        .scroll-line::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
+            background-color: #fff; animation: scrollDown 2s infinite;
+        }
+        @keyframes scrollDown { 0% { transform: translateY(-100%); } 100% { transform: translateY(200%); } }
+
+        /* ==========================================================================
+           8. COLLECTION & TABS
+           ========================================================================== */
+        .collection-section { 
+            padding: var(--spacing-xxxl) 0; position: relative; 
+            background-color: var(--theme-bg);
+            transition: background-color var(--transition-slow);
+        }
+        
+        .tab-controls { display: flex; justify-content: center; gap: var(--spacing-xxl); margin-bottom: var(--spacing-xxxl); border-bottom: 1px solid var(--color-border); padding-bottom: 10px;}
+        .tab-btn {
+            font-family: var(--font-body); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--color-text-light); padding-bottom: var(--spacing-md); position: relative; transition: color var(--transition-fast);
+        }
+        .tab-btn::after {
+            content: ''; position: absolute; bottom: -11px; left: 0; width: 100%; height: 1px;
+            background-color: var(--theme-accent); transform: scaleX(0); transition: transform var(--transition-medium), background-color var(--transition-slow);
+        }
+        .tab-btn.active { color: var(--theme-accent); font-weight: 500; }
+        .tab-btn.active::after { transform: scaleX(1); }
+        .tab-content { display: none; opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+        .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
+
+        /* ==========================================================================
+           9. PRODUCT VERTICAL LAYOUT
+           ========================================================================== */
+        .product-vertical-list { display: flex; flex-direction: column; gap: var(--spacing-xxxl); max-width: 900px; margin: 0 auto; }
+        .product-card { display: flex; flex-direction: row; align-items: center; gap: 60px; }
+        .product-card:nth-child(even) { flex-direction: row-reverse; }
+        
+        .product-image-wrapper {
+            position: relative; width: 45%; padding-top: 55%; background-color: var(--color-surface);
+            overflow: hidden; flex-shrink: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+        .product-real-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-slow); }
+        .product-card:hover .product-real-image { transform: scale(1.05); }
+
+        .product-info { width: 55%; display: flex; flex-direction: column; align-items: flex-start; }
+        .product-meta { 
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; 
+            color: var(--theme-accent); margin-bottom: var(--spacing-sm); font-weight: 600;
+            transition: color var(--transition-slow);
+        }
+        .product-title { font-size: 2.2rem; margin-bottom: var(--spacing-md); font-family: var(--font-heading); color: var(--color-text-main); }
+        .product-desc { font-size: 0.95rem; color: var(--color-text-light); margin-bottom: var(--spacing-md); line-height: 1.8; }
+        
+        .product-notes { margin: var(--spacing-md) 0 var(--spacing-xl); width: 100%; border-top: 1px solid var(--color-border); padding-top: var(--spacing-md); }
+        .note-row { display: flex; margin-bottom: 8px; font-size: 0.85rem; }
+        .note-label { font-weight: 600; text-transform: uppercase; letter-spacing: 1px; width: 70px; flex-shrink: 0; font-size: 0.75rem; color: var(--color-text-main);}
+        .note-value { color: var(--color-text-light); font-style: italic; font-family: var(--font-heading);}
+        
+        .product-price { 
+            font-family: var(--font-body); font-size: 1rem; margin-bottom: var(--spacing-lg); font-weight: 500;
+            color: var(--theme-accent); transition: color var(--transition-slow);
+        }
+        
+        .btn-add-cart {
+            padding: 12px 32px; background-color: transparent; color: var(--color-text-main);
+            border: 1px solid var(--color-text-main); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px;
+            transition: all var(--transition-fast);
+        }
+        .btn-add-cart:hover { background-color: var(--theme-btn-hover); border-color: var(--theme-btn-hover); color: #fff; }
+
+        /* Dynamic Bottle Fallback */
+        .product-bottle {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 35%; height: 55%; background: linear-gradient(135deg, #fff, #e0e0e0);
+            border: 1px solid rgba(0,0,0,0.1); border-radius: 12px 12px 4px 4px;
+        }
+
+        /* ==========================================================================
+           10. PHILOSOPHY SECTION
+           ========================================================================== */
+        .philosophy-section { padding: var(--spacing-xxxl) 0; background-color: var(--color-surface); border-top: 1px solid var(--color-border); }
+        .philosophy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xxxl); align-items: center; }
+        .philosophy-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: var(--color-text-light); margin-bottom: var(--spacing-lg); display: block; }
+        .philosophy-title { font-size: 2.5rem; margin-bottom: var(--spacing-lg); line-height: 1.2; }
+        .philosophy-text { color: var(--color-text-light); font-size: 1rem; line-height: 1.8; margin-bottom: var(--spacing-xl); }
+        .philosophy-image-container { position: relative; width: 100%; padding-top: 120%; background-color: var(--color-surface-alt); overflow: hidden; }
+
+        /* ==========================================================================
+           11. FOOTER
+           ========================================================================== */
+        .footer { background-color: #111; padding: var(--spacing-xxxl) 0 var(--spacing-xl); color: #fff; }
+        .founder-quote-container { max-width: 700px; margin: 0 auto var(--spacing-xxxl); text-align: center; }
+        .founder-quote { font-family: var(--font-heading); font-size: 2rem; font-style: italic; font-weight: 400; margin-bottom: var(--spacing-md); line-height: 1.4; }
+        .founder-title { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: #888; }
+        
+        .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; border-top: 1px solid #333; padding-top: var(--spacing-xxl); margin-bottom: var(--spacing-xxl); }
+        .footer-col h4 { font-family: var(--font-body); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: var(--spacing-lg); color: #888; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { font-size: 0.9rem; color: #ccc; }
+        .footer-col ul li a:hover { color: #fff; }
+        .footer-logo { font-family: var(--font-logo); font-size: 2.5rem; line-height: 1; display: block; margin-bottom: 16px; color: #fff; }
+        
+        .footer-bottom { text-align: center; font-size: 0.8rem; color: #666; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #333; padding-top: 24px; }
+
+        /* ==========================================================================
+           12. MODALS (Nav, Cart, Checkout, Auth)
+           ========================================================================== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px);
+            z-index: 2000; opacity: 0; visibility: hidden; transition: all var(--transition-medium);
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal-centered {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%) scale(0.95);
+            background-color: var(--color-surface); width: 90%; max-width: 400px; padding: var(--spacing-xl);
+            border: 1px solid var(--color-border); opacity: 0; visibility: hidden; transition: all var(--transition-medium);
+        }
+        
+        .modal-sidebar {
+            position: absolute; top: 0; height: 100%; background-color: var(--color-surface);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column;
+        }
+        
+        /* Cart Sidebar (Right) */
+        #modal-cart { right: 0; width: 100%; max-width: 400px; border-left: 1px solid var(--color-border); transform: translateX(100%); }
+        .modal-overlay.active #modal-cart.active { transform: translateX(0); }
+
+        /* Global Nav Sidebar (Left) */
+        #modal-nav { left: 0; width: 100%; max-width: 450px; border-right: 1px solid var(--color-border); transform: translateX(-100%); padding: var(--spacing-xxxl) var(--spacing-xl); }
+        .modal-overlay.active #modal-nav.active { transform: translateX(0); }
+
+        .modal-overlay.active .modal-centered.active { transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible; }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); border-bottom: 1px solid var(--color-border); }
+        .modal-header h3 { font-family: var(--font-body); font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; }
+        .btn-close { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; transition: transform var(--transition-fast); }
+        .btn-close:hover { transform: rotate(90deg); }
+
+        /* Nav Menu Styles */
+        .global-nav-links { display: flex; flex-direction: column; gap: var(--spacing-lg); margin-top: var(--spacing-xl); }
+        .global-nav-links a { 
+            font-family: var(--font-heading); font-size: 2.5rem; color: var(--color-text-main); 
+            line-height: 1.1; position: relative; width: fit-content;
+        }
+        .global-nav-links a::after {
+            content: ''; position: absolute; bottom: 5px; left: 0; width: 100%; height: 2px;
+            background-color: var(--color-text-main); transform: scaleX(0); transform-origin: left; transition: transform var(--transition-medium);
+        }
+        .global-nav-links a:hover::after { transform: scaleX(1); }
+        .global-nav-sub { margin-top: var(--spacing-xxl); display: flex; flex-direction: column; gap: var(--spacing-md); }
+        .global-nav-sub a { font-family: var(--font-body); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; color: var(--color-text-light); }
+        .global-nav-sub a:hover { color: var(--color-text-main); }
+
+        .form-group { margin-bottom: var(--spacing-md); text-align: left; }
+        .form-label { display: block; margin-bottom: 8px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-light); }
+        .form-control { width: 100%; padding: 12px; border: 1px solid var(--color-border); background: transparent; font-family: var(--font-body); font-size: 0.9rem; }
+        .form-control:focus { outline: none; border-color: var(--theme-accent); }
+        
+        .btn-solid {
+            width: 100%; padding: 14px; background-color: var(--color-text-main); color: #fff;
+            text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; transition: background-color var(--transition-fast);
+        }
+        .btn-solid:disabled { background-color: var(--color-border); cursor: not-allowed; }
+        .btn-solid:hover:not(:disabled) { background-color: var(--theme-btn-hover); }
+
+        .cart-body { flex-grow: 1; overflow-y: auto; padding: 0 var(--spacing-xl); }
+        .cart-item { display: flex; gap: var(--spacing-md); margin-bottom: var(--spacing-md); padding-bottom: var(--spacing-md); border-bottom: 1px solid var(--color-border); }
+        .cart-item-img { width: 70px; height: 90px; background: var(--color-surface-alt); flex-shrink: 0; }
+        .cart-real-image { width: 100%; height: 100%; object-fit: cover; }
+        .cart-item-title { font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 4px; }
+        .cart-item-price { color: var(--color-text-light); font-size: 0.85rem; }
+        
+        .cart-footer { padding: var(--spacing-xl); border-top: 1px solid var(--color-border); background-color: var(--color-surface); }
+        .cart-total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-family: var(--font-body); font-weight: 500; margin-bottom: var(--spacing-lg); }
+
+        /* ==========================================================================
+           13. RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .product-card, .product-card:nth-child(even) { flex-direction: column; gap: var(--spacing-lg); text-align: center; }
+            .product-image-wrapper { width: 80%; padding-top: 100%; }
+            .product-info { width: 100%; align-items: center; }
+            .note-row { justify-content: center; }
+            .note-label { text-align: right; margin-right: 8px; }
+            .note-value { text-align: left; }
+            .philosophy-grid { grid-template-columns: 1fr; gap: var(--spacing-xl); }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .hero { min-height: auto; height: 100svh; }
+            .product-image-wrapper { width: 100%; padding-top: 120%; }
+            .footer-bottom { flex-direction: column; gap: 10px; }
+            .hero-logo-center { font-size: 4rem; }
+            .quote-line.highlight { font-size: 3rem; }
+            .global-nav-links a { font-size: 2rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-logo">era</div>
+        <div class="loader-line-container">
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <header class="navbar" id="navbar">
+        <div class="container navbar-content">
+            <!-- Left Side: Hamburger Menu -->
+            <button class="icon-btn" id="btn-open-nav" style="border: none;">
+                <svg viewBox="0 0 24 24" style="width: 24px; height: 24px;"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </button>
+            
+            <!-- Center: Logo -->
+            <a href="index.html" class="nav-brand" id="main-logo">era</a>
+            
+            <!-- Right Side: Icons -->
+            <div class="nav-icons">
+                <button class="icon-btn" id="btn-open-auth">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
+                </button>
+                <button class="icon-btn" id="btn-open-cart">
+                    <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" /></svg>
+                    <span class="cart-badge" id="cart-badge-count">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-bg active" id="hero-bg-men" style="background-image: url('images/hero-men.jpg');"></div>
+        <div class="hero-bg" id="hero-bg-women" style="background-image: url('images/hero-men.jpg');"></div>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content" id="hero-text-container">
+            <div class="hero-logo-center" id="main-logo-center">era</div>
+            <h1 class="hero-quote">
+                <span class="quote-line">Spray the</span>
+                <span class="quote-line highlight" id="hero-confidence">confidence</span>
+                <span class="quote-line">within.</span>
+            </h1>
+        </div>
+
+        <div class="scroll-indicator" id="hero-scroll">
+            <span class="scroll-text">Discover</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- MAIN COLLECTION -->
+    <main id="collection" class="collection-section">
+        <div class="container">
+
+            <div class="tab-controls reveal-up">
+                <button class="tab-btn active" data-target="tab-men">Men's Era</button>
+                <button class="tab-btn" data-target="tab-women">Women's Era</button>
+            </div>
+
+            <div id="tab-men" class="tab-content active">
+                <div class="product-vertical-list" id="list-men"></div>
+            </div>
+
+            <div id="tab-women" class="tab-content">
+                <div class="product-vertical-list" id="list-women"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- THE PHILOSOPHY SECTION -->
+    <section class="philosophy-section">
+        <div class="container">
+            <div class="philosophy-grid">
+                <div class="philosophy-content reveal-up delay-200">
+                    <span class="philosophy-label">Our Philosophy</span>
+                    <h2 class="philosophy-title">More Than Fragrance.<br>It's an Epoch.</h2>
+                    <p class="philosophy-text">
+                        The name <strong>era</strong> represents a definitive span of time that shapes who we
+                        are. We believe that scent is the most powerful anchor to memory. Every bottle we craft is
+                        designed to capture your current era—your ambitions, your confidence, and your unwritten future.
+                    </p>
+                    <p class="philosophy-text">
+                        Sourced globally but designed for the modern individual, our extraits de parfum utilize premium extracts
+                        to ensure your invisible signature lingers long after you've left the room.
+                    </p>
+                </div>
+                <div class="philosophy-image-container reveal-up delay-400">
+                    <img src="images/bottom-cover-placeholder.jpg" alt="era Philosophy"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="founder-quote-container reveal-up">
+                <h2 class="founder-quote">"True luxury is not just worn; it is remembered. It captures a moment in time,
+                    an era of your life."</h2>
+                <span class="founder-title">Founder & Creator</span>
+            </div>
+
+            <div class="footer-grid reveal-fade delay-200">
+                <div class="footer-col" style="grid-column: span 2;">
+                    <span class="footer-logo">era</span>
+                    <p style="color: #888; max-width: 300px; font-size: 0.9rem;">Crafted for those who demand unparalleled projection and an unapologetic presence.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Collections</h4>
+                    <ul>
+                        <li><a href="#">Men's era</a></li>
+                        <li><a href="#">Women's era</a></li>
+                        <li><a href="discovery.html">Discovery Set</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>The House</h4>
+                    <ul>
+                        <li><a href="craft.html">The Craft</a></li>
+                        <li><a href="epoch.html">The Epoch</a></li>
+                        <li><a href="archive.html">The Archive</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom reveal-fade delay-400">
+                <span>&copy; 2026 era Fragrances. All rights reserved.</span>
+                <div style="display: flex; gap: 20px;">
+                    <a href="#" style="color: #ccc;">Instagram</a>
+                    <a href="#" style="color: #ccc;">TikTok</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+    <div class="modal-overlay" id="main-overlay">
+        
+        <!-- Global Navigation Sidebar (Left) -->
+        <div class="modal-sidebar" id="modal-nav">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+                <span class="nav-brand" style="font-size: 2rem;">era</span>
+                <button class="btn-close modal-close"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></button>
+            </div>
+            
+            <nav class="global-nav-links">
+                <a href="index.html">The Collection</a>
+                <a href="discovery.html">Discovery Set</a>
+                <a href="craft.html">The Craft</a>
+                <a href="epoch.html">The Epoch</a>
+                <a href="archive.html">The Archive</a>
+            </nav>
+
+            <nav class="global-nav-sub">
+                <a href="#" onclick="openModal('modal-auth')">Sign In / Register</a>
+                <a href="#">Track Order</a>
+                <a href="#">Contact Us</a>
+            </nav>
+        </div>
+
+        <!-- Cart Sidebar (Right) -->
+        <div class="modal-sidebar" id="modal-cart">
+            <div class="modal-header" style="padding: 32px 32px 16px;">
+                <h3>Your Cart</h3>
+                <button class="btn-close modal-close"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></button>
+            </div>
+            <div class="cart-body" id="cart-items-container">
+                <p id="cart-empty-msg" style="text-align: center; margin-top: 60px; color: var(--color-text-light);">Your cart is empty.</p>
+                <div id="cart-items-list" style="margin-top: 20px;"></div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total-row">
+                    <span>Total</span>
+                    <span id="cart-total">₹0</span>
+                </div>
+                <button class="btn-solid" id="btn-checkout" onclick="openModal('modal-checkout')" disabled>Checkout securely</button>
+            </div>
+        </div>
+
+        <!-- Checkout Modal -->
+        <div class="modal-centered" id="modal-checkout">
+            <div class="modal-header">
+                <h3>Secure Checkout</h3>
+                <button class="btn-close modal-close"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></button>
+            </div>
+            <form onsubmit="event.preventDefault(); alert('Order Placed! Welcome to the new era.'); closeAllModals(); cart=[]; updateCartUI();">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Shipping Details</label>
+                    <input type="text" class="form-control" placeholder="Full Name" style="margin-bottom: 8px;" required>
+                    <input type="text" class="form-control" placeholder="Street Address" required>
+                </div>
+                <div style="display: flex; gap: 16px;">
+                    <div class="form-group" style="flex:1;">
+                        <label class="form-label">Card Number</label>
+                        <input type="text" class="form-control" placeholder="0000 0000 0000 0000" required>
+                    </div>
+                    <div class="form-group" style="width: 100px;">
+                        <label class="form-label">CVV</label>
+                        <input type="password" class="form-control" placeholder="123" maxlength="4" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-solid" style="margin-top: 8px;">Pay <span id="checkout-btn-total">₹0</span></button>
+            </form>
+        </div>
+
+        <!-- Auth Modal -->
+        <div class="modal-centered" id="modal-auth">
+            <div class="modal-header">
+                <h3>Sign In</h3>
+                <button class="btn-close modal-close"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></button>
+            </div>
+            <form onsubmit="event.preventDefault(); alert('Logged In!'); closeAllModals();">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn-solid" style="margin-top: 16px;">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // ==========================================
+        // 1. DATA CONFIGURATION
+        // ==========================================
+        const productsMen = [
+            {
+                id: 'm1', name: 'Midnight', price: 1200, concentration: 'Extrait de Parfum', size: '50ml / 1.7 fl oz',
+                desc: 'A bold, sophisticated fusion designed for the transition between dusk and dark. It is sharp, magnetic, and unapologetically bold.',
+                notes: { top: 'Crushed Black Pepper, Calabrian Bergamot', heart: 'Smoked Vetiver, Silver Sage, Dark Iris', base: 'Aged Leather, Mysore Sandalwood' },
+                image: 'images/midnight.jpg'
+            },
+            {
+                id: 'm2', name: 'Monsoon', price: 1200, concentration: 'Extrait de Parfum', size: '50ml / 1.7 fl oz',
+                desc: 'Capturing the electric tension in the air just before the rain falls. An earthy, aquatic masterpiece that balances raw nature with refined freshness.',
+                notes: { top: 'Fresh Petrichor, Sea Salt, Bitter Grapefruit', heart: 'Crushed Basil Leaves, Blue Lotus', base: 'Damp Earth, Cedarwood, White Musk' },
+                image: 'images/monsoon.jpg'
+            },
+            {
+                id: 'm3', name: 'The Silk Route', price: 1200, concentration: 'Extrait de Parfum', size: '50ml / 1.7 fl oz',
+                desc: 'An opulent, commanding fragrance that speaks to heritage and luxury. It is warm, highly textured, and designed for the modern kingmaker.',
+                notes: { top: 'Kashmiri Saffron, Blood Orange, Nutmeg', heart: 'Rose Absolute, Roasted Coffee Bean', base: 'Royal Agarwood (Oud), Bourbon Vanilla' },
+                image: 'images/silk-route.jpg'
+            }
+        ];
+
+        const productsWomen = [
+            {
+                id: 'w1', name: 'Jasmine Veil', price: 1200, concentration: 'Extrait de Parfum', size: '50ml / 1.7 fl oz',
+                desc: 'A modern, luminous interpretation of a timeless classic. It feels like walking through a blossoming garden at midnight, wrapped in sheer silk.',
+                notes: { top: 'Sparkling Pear, White Tea, Bergamot Zest', heart: 'Madurai Jasmine, Dewy Peony', base: 'Cashmere Wood, Soft Honey' },
+                image: 'images/jasmine-veil.jpg'
+            },
+            {
+                id: 'w2', name: 'Golden Hour', price: 1200, concentration: 'Extrait de Parfum', size: '50ml / 1.7 fl oz',
+                desc: 'The feeling of the sun warming your skin just before it sets. A decadent, glowing, and incredibly addictive sweet-floral profile.',
+                notes: { top: 'Sun-drenched Fig, Pink Pepper, Mandarin', heart: 'Ylang-Ylang, Tuberose, Toasted Almond', base: 'Melted Amber, Tonka Bean, Creamy Vanilla' },
+                image: 'images/golden-hour.jpg'
+            },
+            {
+                id: 'w3', name: 'Crimson', price: 1200, concentration: 'Extrait de Parfum', size: '50ml / 1.7 fl oz',
+                desc: 'Fierce, passionate, and beautifully complex. A rich, dark fruit and floral blend that demands attention without ever raising its voice.',
+                notes: { top: 'Black Cherry, Saffron Twist, Pink Grapefruit', heart: 'Damask Rose, Plum Nectar, Magnolia', base: 'Dark Cedar, Labdanum, Suede' },
+                image: 'images/crimson.jpg'
+            }
+        ];
+
+        let cart = [];
+
+        // ==========================================
+        // 2. INITIALIZATION & PRELOADER
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProductsVertical(productsMen, 'list-men');
+            renderProductsVertical(productsWomen, 'list-women');
+            setupTabs();
+            setupModals();
+
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                if (preloader) preloader.classList.add('fade-out');
+                document.body.classList.remove('loading');
+
+                setTimeout(() => {
+                    document.getElementById('navbar').classList.add('nav-visible');
+                    document.getElementById('hero-text-container').classList.add('animate-in');
+                    document.getElementById('hero-scroll').classList.add('animate-in');
+                    setupScrollAnimations();
+                }, 400);
+            }, 1000);
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // ==========================================
+        // 3. SCROLL ANIMATIONS
+        // ==========================================
+        function setupScrollAnimations() {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-revealed');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal-up, .reveal-fade').forEach(el => observer.observe(el));
+        }
+
+        // ==========================================
+        // 4. VERTICAL PRODUCT RENDERING
+        // ==========================================
+        function renderProductsVertical(arr, containerId) {
+            const container = document.getElementById(containerId);
+            let html = '';
+            arr.forEach((p, index) => {
+                const delay = `delay-${(index % 3 + 1) * 100}`;
+                html += `
+                    <div class="product-card reveal-up ${delay}">
+                        <div class="product-image-wrapper">
+                            <img src="${p.image}" alt="${p.name}" class="product-real-image" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'product-bottle\\'></div>';">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-meta">${p.concentration} &nbsp;|&nbsp; ${p.size}</span>
+                            <h3 class="product-title">${p.name}</h3>
+                            <p class="product-desc">${p.desc}</p>
+                            
+                            <div class="product-notes">
+                                <div class="note-row"><span class="note-label">Top</span><span class="note-value">${p.notes.top}</span></div>
+                                <div class="note-row"><span class="note-label">Heart</span><span class="note-value">${p.notes.heart}</span></div>
+                                <div class="note-row"><span class="note-label">Base</span><span class="note-value">${p.notes.base}</span></div>
+                            </div>
+                            <div class="product-price">₹${p.price}</div>
+                            <button class="btn-add-cart" onclick="addToCart('${p.id}', '${p.name}', ${p.price}, '${p.image}')">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // ==========================================
+        // 5. TAB LOGIC & BACKGROUND CROSS-FADE
+        // ==========================================
+        function setupTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const confidenceText = document.getElementById('hero-confidence');
+            const bgMen = document.getElementById('hero-bg-men');
+            const bgWomen = document.getElementById('hero-bg-women');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // Trigger text pulse
+                    confidenceText.classList.remove('pulse-text');
+                    void confidenceText.offsetWidth;
+                    confidenceText.classList.add('pulse-text');
+
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                        content.querySelectorAll('.reveal-up').forEach(el => el.classList.remove('is-revealed'));
+                    });
+
+                    const targetId = btn.getAttribute('data-target');
+                    const targetContent = document.getElementById(targetId);
+
+                    setTimeout(() => {
+                        targetContent.classList.add('active');
+                        setTimeout(() => { targetContent.querySelectorAll('.reveal-up').forEach(el => el.classList.add('is-revealed')); }, 50);
+                    }, 10);
+
+                    // Switch hero text, background, and CSS theme
+                    if (targetId === 'tab-women') {
+                        setTimeout(() => { confidenceText.textContent = 'allure'; }, 400); // Changes midway through the pulse
+                        bgMen.classList.remove('active');
+                        bgWomen.classList.add('active');
+                        document.body.classList.add('theme-women');
+                    } else {
+                        setTimeout(() => { confidenceText.textContent = 'confidence'; }, 400);
+                        bgWomen.classList.remove('active');
+                        bgMen.classList.add('active');
+                        document.body.classList.remove('theme-women');
+                    }
+                });
+            });
+        }
+
+        // ==========================================
+        // 6. CART LOGIC
+        // ==========================================
+        function addToCart(id, name, price, imagePath) {
+            const existing = cart.find(i => i.id === id);
+            if (existing) existing.quantity++;
+            else cart.push({ id, name, price: price, image: imagePath, quantity: 1 });
+
+            updateCartUI();
+            const badge = document.getElementById('cart-badge-count');
+            badge.classList.add('bump');
+            setTimeout(() => badge.classList.remove('bump'), 300);
+            openModal('modal-cart');
+        }
+
+        function removeCartItem(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-badge-count').textContent = totalItems;
+
+            const container = document.getElementById('cart-items-list');
+            const emptyMsg = document.getElementById('cart-empty-msg');
+            const btnCheckout = document.getElementById('btn-checkout');
+
+            if (cart.length === 0) {
+                emptyMsg.style.display = 'block';
+                container.innerHTML = '';
+                btnCheckout.disabled = true;
+            } else {
+                emptyMsg.style.display = 'none';
+                btnCheckout.disabled = false;
+                let html = '';
+                cart.forEach(item => {
+                    html += `
+                        <div class="cart-item">
+                            <div class="cart-item-img"><img src="${item.image}" class="cart-real-image" onerror="this.style.display='none';"></div>
+                            <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
+                                <h4 class="cart-item-title">${item.name}</h4>
+                                <div class="cart-item-price">₹${item.price} x ${item.quantity} = <strong>₹${item.price * item.quantity}</strong></div>
+                                <button onclick="removeCartItem('${item.id}')" style="text-align:left; color:#888; font-size:0.7rem; margin-top:8px; text-transform:uppercase; letter-spacing:1px; border:none; background:none; cursor:pointer;">Remove</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cart-total').textContent = `₹${subtotal}`;
+            document.getElementById('checkout-btn-total').textContent = `₹${subtotal}`;
+        }
+
+        // ==========================================
+        // 7. MODAL LOGIC (Including Global Nav)
+        // ==========================================
+        const overlay = document.getElementById('main-overlay');
+
+        function setupModals() {
+            // Updated event listeners to include the new nav button
+            document.getElementById('btn-open-nav').addEventListener('click', () => openModal('modal-nav'));
+            document.getElementById('btn-open-auth').addEventListener('click', () => openModal('modal-auth'));
+            document.getElementById('btn-open-cart').addEventListener('click', () => openModal('modal-cart'));
+            
+            document.querySelectorAll('.modal-close').forEach(btn => btn.addEventListener('click', closeAllModals));
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) closeAllModals(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllModals(); });
+        }
+
+        function openModal(id) {
+            document.querySelectorAll('.modal-centered, .modal-sidebar').forEach(m => m.classList.remove('active'));
+            overlay.classList.add('active');
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeAllModals() {
+            overlay.classList.remove('active');
+            document.querySelectorAll('.modal-centered, .modal-sidebar').forEach(m => m.classList.remove('active'));
+        }
+    </script>
+</body>
+</html>
